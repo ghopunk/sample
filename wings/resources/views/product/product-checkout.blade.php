@@ -1,7 +1,7 @@
 @extends('product.product')
 
 @section('title')
-@if( isset($item) )
+@if( isset($carts) )
 	Product Checkout
 @else
 	404 Not Found

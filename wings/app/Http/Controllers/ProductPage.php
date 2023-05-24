@@ -153,13 +153,13 @@ class ProductPage extends Controller
 				'currency' 		=> $product->currency,
 			];
 			$sub_total = $carts[$request->product_code]['sub_total_currency'];
+			$total = collect($carts)->sum('sub_total');
+			$first = collect($carts)->firstWhere('currency');
+			$total_currency = isset($first['currency']) ? PrepareProduct::formatCurrency( $total, $first['currency'] ) : $total;
 			if( empty($request->quantity) ) {
 				unset($carts[$request->product_code]);
 			}
 			$cookie = cookie( 'gcharts', json_encode($carts), 3600);
-			$total = collect($carts)->sum('sub_total');
-			$first = collect($carts)->firstWhere('currency');
-			$total_currency = isset($first['currency']) ? PrepareProduct::formatCurrency( $total, $first['currency'] ) : false;
 			return response()->json( [ 'sub_total'=>$sub_total, 'total'=>$total_currency ] )->cookie($cookie);
 		} else {
 			return response()->json(['message' => 'Produk Tidak Ditemukan'],404);
